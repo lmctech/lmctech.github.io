@@ -1,0 +1,392 @@
+// to do
+// make the content in another "content body" section (separate from header, to change margin etc)
+// make the images more scalable (Grid stuff)
+// add progress bar
+// more pages (team page, etc)
+
+
+
+body {
+    margin: 0;
+    font-family: 'Overpass', sans-serif; 
+}
+
+.grid-container {
+    display: grid;
+}
+
+canvas {
+    display: block;
+    position: absolute;
+    z-index: -1;
+    max-width: 100%;
+}
+.fullbody{
+    margin: 0; height: 100%; overflow: hidden;
+}
+
+//MAIN SITE
+.main-header {
+    grid-area: main-header;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .primary-nav {
+        margin: 8px 8px;
+        display: flex;
+        list-style-type: none;
+        justify-content: space-around;
+        align-items: center;
+
+        li {
+            margin-inline: 2vw;
+
+            a {
+                color: black;
+                text-decoration: none;
+                font-size: 1rem;
+
+            }
+
+            a:hover {
+                color: orange;
+            }
+        }
+
+    }
+
+    .corner-logo {
+        max-height: 3em;
+        margin: 10px 20px;
+
+        a {
+            color: black;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        a:hover {
+            color: orange;
+        }
+    }
+
+    border-bottom: 1px solid black;
+}
+
+.heavy {
+    font-weight: 500;
+}
+
+.heavier {
+    font-weight: 700;
+}
+
+
+//about
+.about {
+    height: 100vh;
+    display: grid;
+    margin: 0 2vw;
+    //width:75vw;
+    align-self: center;
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: min-content auto;
+    gap: 2vmax 0px;
+    grid-template-areas:
+        "main-header main-header "
+        "s1 s1 ";
+
+    img {
+        max-width: 90vw;
+    }
+
+    .background {
+        grid-row-start: 0;
+        grid-column-start: 0;
+        z-index: -1;
+    }
+
+    .s1 {
+        grid-area: s1;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 0.1fr 1fr;
+        grid-template-rows: auto auto;
+        align-items: center;
+        gap: 0px 0px;
+        grid-template-areas:
+            "title title image"
+            "title title image ";
+
+        .title {
+            grid-area: title;
+            justify-self: end;
+            z-index: 1;
+
+            margin-right: -12vw;
+            margin-left: 3vw;
+
+            h1 {
+
+                font-size: 2rem;
+                font-weight: 800;
+                margin-bottom: 0;
+                max-width:25ch;
+            }
+
+            h2 {
+
+                margin-left: 0.5ch;
+                font-size: 1rem;
+                font-weight: 500;
+            }
+        }
+
+        .about-img {
+            grid-area: image;
+            z-index: 0;
+            margin-right: 3vw;
+
+            img {
+                max-width: 100%;
+                max-height: 80vh;
+            }
+        }
+
+        p {
+            grid-area: text;
+            margin-bottom: 20%;
+        }
+    }
+
+    .s2 {
+        grid-area: s2;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 0.1fr 1fr;
+        grid-template-rows: min-content;
+        align-items: center;
+        gap: 0px 0px;
+        grid-template-areas:
+            "text . image ";
+
+        justify-items: space-between;
+
+        .about-img {
+            grid-area: image;
+            display: grid;
+
+            img {
+                justify-self: end;
+                max-width: 100%;
+                max-height: 50vh;
+            }
+        }
+
+        p {
+
+            grid-area: text;
+            margin-bottom: 20%;
+        }
+    }
+
+    .s3 {
+        grid-area: s3;
+
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: min-content min-content min-content;
+        align-items: center;
+        gap: 0px 0px;
+        grid-template-areas:
+            " title "
+            " image "
+            " text ";
+
+        .title {
+            grid-area: title;
+            z-index: 1;
+            margin-bottom: -25px;
+            margin-left: 10vw;
+            font-size: 2.5rem;
+            justify-self: start;
+        }
+
+        .about-img {
+            grid-area: image;
+            z-index: 0;
+
+            img {
+                max-width: 100%;
+                object-fit: cover;
+                object-position: center;
+                height: 240px;
+                width: 100%;
+            }
+        }
+
+        p {
+            grid-area: text;
+        }
+    }
+
+}
+
+.portfolioPage {
+    height: 100vh;
+    display: grid;
+    margin: 0 2vw;
+    //width:75vw;
+    align-self: center; 
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: min-content min-content min-content;
+    gap: 35px 0px;
+    grid-template-areas:
+        "main-header main-header "
+        "s1 s1 "
+        "s2 s2 ";
+
+    img {
+        max-width: 90vw;
+    }
+
+
+
+    .s1 {
+        grid-area: s1;
+    }
+
+    .s2 {
+        grid-area: s2;
+    }
+
+    .s3 {
+        grid-area: s3;
+    }
+
+    .portfolio-item {
+        width: 90%;
+        max-width: 1000px;
+        align-self: center;
+        grid-template-rows: min-content min-content min-content;
+        grid-template-columns: 2fr 1fr;
+        background-color: hsla(0, 0%, 0%, 0.042);
+        padding: 10px;
+        border-radius: 15px;
+
+        display: grid;
+        justify-items: center;
+        justify-self: center;
+
+        .item-title {
+            grid-area: title;
+            font-size: 1.6rem;
+            font-weight: 600;
+
+            justify-self: center;
+            text-align: center;
+            margin: 0 0px 20px 0px;
+        }
+
+        .item-details {
+            grid-area: details;
+            display: grid;
+            justify-self: start;
+            align-self: center;
+            z-index: 1;
+            margin-bottom: 0px;
+            padding: 0 1ch;
+
+
+            grid-template-rows: min-content min-content min-content;
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "sub1"
+                "sub2"
+                "description";
+
+            > * a{
+                
+                color: black; 
+
+            }
+
+            .subtitle1 {
+                grid-area: sub1;
+                
+             //   justify-self: start;
+                align-self: center;
+                font-size: 1.1rem;
+                font-style: italic;
+                font-weight: 100;
+                margin: 10px 0;
+                padding: 0 1ch;
+            
+                display:flex; 
+                justify-content: space-between;
+            }
+
+            .subtitle2 {
+                justify-self: start;
+
+                align-self: center;
+                grid-area: sub2;
+                font-size: 1.1rem;
+
+                font-weight: 400;
+
+                margin: 10px 0;
+                padding: 0 1ch;
+            }
+
+            .description {
+
+                grid-area: description;
+                font-size: 1rem;
+
+                font-weight: 300;
+                padding: 0 1ch;
+                line-height: 1.2rem;
+            }
+
+        }
+
+        .item-image {
+            grid-area: images;
+            justify-self: center;
+
+
+            img {
+                max-width: 100%;
+                height: auto;
+                max-height: 400px;
+            }
+        }
+    }
+
+
+}
+
+@media (max-width: 800px) {
+    .portfolio-item {
+        grid-template-areas:
+            "title title"
+            "details details"
+            "images images ";
+    }
+}
+
+@media (min-width: 800px) {
+    .portfolio-item {
+
+        grid-template-areas:
+            "title title"
+            "details images"
+            ". . ";
+    }
+}
