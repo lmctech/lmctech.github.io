@@ -11,9 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laura McHugh | Other Projects</title>
     <link rel="stylesheet" href="/style.css">
-</head>
-
-<body class="grid-container ">
     <script>
         window.fbAsyncInit = function () {
             FB.init({
@@ -24,6 +21,10 @@
             });
         };
     </script>
+</head>
+
+<body class="grid-container ">
+   
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
 
@@ -69,7 +70,7 @@
                     'Thanks for logging in, ' + response.name + '!';
             });
         }
-        
+
         var finished_rendering = function () {
             console.log("finished rendering plugins");
             var spinner = document.getElementById("spinner");
