@@ -1,5 +1,5 @@
-//trailing followers
-
+ 
+p5.disableFriendlyErrors = true;
 var x, y;
 var find;
 
@@ -13,9 +13,7 @@ let mazeLine;
 let colChange = 0;
 
 var mazeX, mazeY;
-
-// var words = ["hi","hello","sup","hey","yo","Bonjour", "Namaste", "Wassup", "Howzit", "Ciao",
-// "Salaam", "Hallo", "Shalom", "Hej", "Oi"];
+ 
 var words;
 
 function preload() {
@@ -190,13 +188,9 @@ function addToBrain(caughtWord, col) {
     brain_bits[braincounter].goalX = mazeX;
     brain_bits[braincounter].goalY = mazeY;
 
-    // if (brain_bits[braincounter].w > brain_bits[braincounter].size) {
-    //   brain_bits[braincounter].size = brain_bits[braincounter].w + 4;
-    // }
     brain_bits[braincounter].fixTextSize();
     brain_bits[braincounter].wIndex = braincounter;
-  }
-  console.log(brain_bits.length);
+  } 
   braincounter++;
 }
 
@@ -243,8 +237,6 @@ function changeText() {
     }
     
 }
-
-
     el.elt.textContent = textCurrent;
 
   }
