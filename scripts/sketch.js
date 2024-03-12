@@ -1,5 +1,5 @@
 //trailing followers
-
+p5.disableFriendlyErrors = true;
 var x, y;
 var find;
 
