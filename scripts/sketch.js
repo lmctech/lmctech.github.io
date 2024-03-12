@@ -168,8 +168,7 @@ function showBrain() {
     b.checkCollision()
     b.checkEdges();
     b.updateState();
-    b.cluster();
-    fill(255);
+    b.cluster(); 
     b.showWords();
     b.jiggle();
   }
@@ -179,9 +178,6 @@ var braincounter = 0;
 
 function addToBrain(caughtWord, col) {
 
-
-  for (var i = 0; i <= braincounter; i++) {
-
     brain_bits[braincounter] = new Particle(random(windowWidth), random(windowHeight), 16, 40, col);
     brain_bits[braincounter].word = caughtWord;
     brain_bits[braincounter].w = textWidth(caughtWord);
@@ -190,7 +186,6 @@ function addToBrain(caughtWord, col) {
 
     brain_bits[braincounter].fixTextSize();
     brain_bits[braincounter].wIndex = braincounter;
-  } 
   braincounter++;
 }
 

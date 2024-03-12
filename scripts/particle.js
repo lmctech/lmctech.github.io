@@ -7,14 +7,14 @@ function Particle(x, y, length, maxSize, colour) {
   this.maxSpeed = 4;
   this.history = [];
   this.pos = createVector(x, y);
-    
+
   this.colours = [color(252, 166, 18), color(255, 190, 11), color(255, 0, 110), color(131, 56, 236), color(58, 134, 255)];
   this.pos.x = x;
   this.pos.y = y;
   this.length = length;
   this.maxSize = maxSize;
   this.size = maxSize;
-  
+
   this.textmaxSize = 80;
   this.goalX = x;
   this.goalY = y;
@@ -23,14 +23,14 @@ function Particle(x, y, length, maxSize, colour) {
   this.wIndex = 0;
   this.c = this.colours[this.cIndex % this.colours.length];
   this.control = 1;
-  
+
   this.word = words[this.cIndex % words.length];
-  this.textC=255;
+  this.textC = 255;
   this.w = 0;
-  
-  
-  this.radius = this.size/2;
-  this.update = function () { 
+
+
+  this.radius = this.size / 2;
+  this.update = function () {
     this.c = this.colours[this.cIndex % this.colours.length];
     var v = createVector(this.pos.x, this.pos.y);
     this.history.push(v);
@@ -41,21 +41,20 @@ function Particle(x, y, length, maxSize, colour) {
 
   this.fixTextSize = function () {
 
-    if (page == "page_being.html") { 
-  
+    if (page == "page_being.html") {
+
       this.w = textWidth(this.word);
 
-      if( this.w > this.size){
+      if (this.w > this.size) {
 
-        if( this.w< this.textmaxSize ){
-          this.size=this.w +4;
-        }
-        else{
-          this.size=this.textmaxSize ;
+        if (this.w < this.textmaxSize) {
+          this.size = this.w + 4;
+        } else {
+          this.size = this.textmaxSize;
         }
       }
-      
-    } 
+
+    }
   }
   this.show = function () {
 
@@ -71,27 +70,24 @@ function Particle(x, y, length, maxSize, colour) {
   }
   this.showWords = function () {
 
-    //trail 
-    for (var i = 0; i < this.history.length; i++) { 
+    for (var i = 0; i < this.history.length; i++) {
 
-   
       var pos = this.history[i];
       var r = map(i, 0, this.history.length, 4, this.size);
-      
+
       this.alpha = map(i, 0, this.history.length, 0, 255);
       fill(this.c);
-      // fill(252, 166, 18,this.alpha);
-      
-      stroke(this.c); 
+
+      stroke(this.c);
       ellipse(pos.x, pos.y, r, r);
       noStroke();
-      if(i==this.history.length-1){
+      if (i == this.history.length - 1) {
         fill(this.textC);
         textSize(14);
         textAlign(CENTER, CENTER);
         textWrap(WORD);
         rectMode(CENTER);
-         text(this.word, pos.x, pos.y, this.textmaxSize-10,this.textmaxSize -10); 
+        text(this.word, pos.x, pos.y, this.textmaxSize - 10, this.textmaxSize - 10);
 
       }
     }
@@ -99,22 +95,6 @@ function Particle(x, y, length, maxSize, colour) {
 
   this.follow = function () {
 
-    //     this.goalX=mouseX;
-    //     this.goalY=mouseY;
-    //     let d = map(dist(this.pos.x, this.pos.y, this.goalX, this.goalY), 1, 100, 0.02, 0.025);
-
-    //     if(this.fc==null){
-    //       this.fc=60;
-    //     }
-    //     if(this.diffX==null || (frameCount%this.fc<1 && d<20)){
-    //       this.diffX=randomGaussian(0,40);
-    //       this.diffY=randomGaussian(0,40);
-    //       this.fc=random(60,120);
-    //     }
-    //     this.goalX=this.diffX+mouseX;
-    //     this.goalY=this.diffY+mouseY;
-
-    //      d = map(dist(this.pos.x, this.pos.y, this.goalX, this.goalY), 1, 100, 0.02, 0.025);
     let d = map(dist(this.pos.x, this.pos.y, mouseX, mouseY), 1, 100, 0.02, 0.1);
     d *= this.control;
 
@@ -127,7 +107,6 @@ function Particle(x, y, length, maxSize, colour) {
   this.wander = function () {
 
     let d = dist(this.pos.x, this.pos.y, this.goalX, this.goalY);
-    //let dspeed = map(d, 0, width/2, 0.01, .02);
 
     this.pos.x = lerp(this.pos.x, this.goalX, 0.01);
     this.pos.y = lerp(this.pos.y, this.goalY, 0.01);
@@ -147,10 +126,10 @@ function Particle(x, y, length, maxSize, colour) {
       nemo.size += 0.6;
       this.reBirth();
       score++;
-      if(!trackedWords.includes(this.word)){ 
-        addToBrain(this.word,this.cIndex);
+      if (!trackedWords.includes(this.word)) {
+        addToBrain(this.word, this.cIndex);
         trackedWords.push(this.word);
-      } 
+      }
     }
     if (this.pos.x < 0 || this.goalX < 0) {
       this.goalX = random(100);
@@ -167,42 +146,36 @@ function Particle(x, y, length, maxSize, colour) {
     this.grow();
   }
 
-  this.cluster = function(){
-     
-    let d = dist(this.pos.x, this.pos.y,   mazeX,mazeY);
-    this.goalX = lerp(this.goalX, mazeX , 0.02);
-    this.goalY = lerp(this.goalY, mazeY , 0.02);   
-    //let dspeed = map(d, 0, width/2, 0.01, .02);
+  this.cluster = function () {
+
+    let d = dist(this.pos.x, this.pos.y, mazeX, mazeY);
+    this.goalX = lerp(this.goalX, mazeX, 0.02);
+    this.goalY = lerp(this.goalY, mazeY, 0.02);
 
     this.pos.x = lerp(this.pos.x, this.goalX, 0.05);
-    this.pos.y = lerp(this.pos.y, this.goalY , 0.05);
+    this.pos.y = lerp(this.pos.y, this.goalY, 0.05);
     if (d < 150) {
-      this.pos.x  +=  sin( (t* 0.02) +this.wIndex) ;
-      this.pos.y  += sin( (-t* 0.02) +this.wIndex) ;
+      this.pos.x += sin((t * 0.02) + this.wIndex);
+      this.pos.y += sin((-t * 0.02) + this.wIndex);
     }
 
-  } 
-  this.jiggle = function(){
-     
+  }
+  this.jiggle = function () {
 
-    let d = dist(this.pos.x, this.pos.y,  nemo.pos.x, nemo.pos.y);
-    //let dspeed = map(d, 0, width/2, 0.01, .02);
-    if( d <= this.size *1.5 ){
-
-      this.goalX += random(-20, 20) ;
-      this.goalY += random(-20, 20) ; 
+    let d = dist(this.pos.x, this.pos.y, nemo.pos.x, nemo.pos.y);
+    if (d <= this.size * 1.5) {
+      this.goalX += random(-20, 20);
+      this.goalY += random(-20, 20);
     }
-  
-
   }
 
   this.reBirth = function () {
-    this.size = 0; 
+    this.size = 0;
     this.pos.x = random(windowWidth);
     this.pos.y = random(windowHeight);
     this.goalX = this.pos.x;
     this.goalY = this.pos.y;
- 
+
   }
 
   this.grow = function () {
@@ -212,20 +185,20 @@ function Particle(x, y, length, maxSize, colour) {
   }
 
 
-// collision code adapted from https://www.gorillasun.de/blog/an-algorithm-for-particle-systems-with-collisions/
+  // collision code adapted from https://www.gorillasun.de/blog/an-algorithm-for-particle-systems-with-collisions/
 
-  this.updateState= function (newPos) {
-    
-    
+  this.updateState = function (newPos) {
+
+
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.maxSpeed); // Limit the particle's speed
-    this.pos.add(this.velocity); 
+    this.pos.add(this.velocity);
   }
 
-  this.checkEdges= function () {
+  this.checkEdges = function () {
 
 
-    this.radius = this.size/2;
+    this.radius = this.size / 2;
 
     if (this.pos.x - this.radius < 0) {
       this.pos.x = this.radius; // Prevent from leaving the canvas from the left side
@@ -235,24 +208,24 @@ function Particle(x, y, length, maxSize, colour) {
       this.velocity.x *= -1;
     }
 
-    if (this.pos.y- this.radius < 0) {
-      this.pos.y= this.radius; // Prevent from leaving the canvas from the top
+    if (this.pos.y - this.radius < 0) {
+      this.pos.y = this.radius; // Prevent from leaving the canvas from the top
       this.velocity.y *= -1;
-    } else if (this.pos.y+ this.radius > windowHeight) {
-      this.pos.y= height - this.radius; // Prevent from leaving the canvas from the bottom
+    } else if (this.pos.y + this.radius > windowHeight) {
+      this.pos.y = height - this.radius; // Prevent from leaving the canvas from the bottom
       this.velocity.y *= -1;
     }
   }
-  
-  this.checkCollision= function (){
-    for(let other of brain_bits){
-      if(this != other){
+
+  this.checkCollision = function () {
+    for (let other of brain_bits) {
+      if (this != other) {
         let distance = this.pos.dist(other.pos);
         let minDistance = this.radius + other.radius;
 
-        
-        if(distance <= minDistance){
-           // Calculate collision response
+
+        if (distance <= minDistance) {
+          // Calculate collision response
           let normal = p5.Vector.sub(other.pos, this.pos).normalize();
           let relativeVelocity = p5.Vector.sub(other.velocity, this.velocity);
           let impulse = p5.Vector.mult(normal, 2 * p5.Vector.dot(relativeVelocity, normal) / (1 + 1));
@@ -267,7 +240,7 @@ function Particle(x, y, length, maxSize, colour) {
           // Apply repulsion force
           this.pos.sub(p5.Vector.div(repulsion, 2));
           other.pos.add(p5.Vector.div(repulsion, 2));
-      
+
         }
       }
     }
