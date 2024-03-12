@@ -1,5 +1,5 @@
 var score = 0;
-
+var wordCounter=0;
 
 function Particle(x, y, length, maxSize, colour) {
   this.velocity = createVector(random(-.1, .1), random(-.1, .1));
@@ -24,9 +24,13 @@ function Particle(x, y, length, maxSize, colour) {
   this.c = this.colours[this.cIndex % this.colours.length];
   this.control = 1;
 
-  this.word = words[this.cIndex % words.length];
+  this.word = words[wordCounter % words.length];
   this.textC = 255;
   this.w = 0;
+  
+  if (page == "page_being.html") {
+    wordCounter++;
+  }
 
 
   this.radius = this.size / 2;
@@ -175,6 +179,11 @@ function Particle(x, y, length, maxSize, colour) {
     this.pos.y = random(windowHeight);
     this.goalX = this.pos.x;
     this.goalY = this.pos.y;
+    if (page == "page_being.html") {
+      this.word = words[wordCounter % words.length];
+      wordCounter++;
+      this.fixTextSize();
+    }
 
   }
 

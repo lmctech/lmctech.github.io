@@ -47,8 +47,6 @@ function setup() {
   for (var i = 0; i < 15; i++) {
 
     npcs[i] = new Particle(random(windowWidth), random(windowHeight), 16, psize, i);
-
-
   }
   frameRate(60);
 }
