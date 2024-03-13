@@ -8,7 +8,8 @@ function Particle(x, y, length, maxSize, colour) {
   this.history = [];
   this.pos = createVector(x, y);
 
-  this.colours = [color(252, 166, 18), color(255, 190, 11), color(255, 0, 110), color(131, 56, 236), color(58, 134, 255)];
+  this.colours = [color(252, 166, 18), color(255, 190, 11), color(255, 0, 110), color(131, 56, 236), color(58, 134, 255)]; 
+  this.wcolours = [ color(170,75, 0), color(199, 0, 0), color(255, 168, 206), color(226, 208, 251),color(189,214, 255)];
   this.pos.x = x;
   this.pos.y = y;
   this.length = length;
@@ -23,9 +24,10 @@ function Particle(x, y, length, maxSize, colour) {
   this.wIndex = 0;
   this.c = this.colours[this.cIndex % this.colours.length];
   this.control = 1;
+  this.fontSize=14;
 
   this.word = words[wordCounter % words.length];
-  this.textC = 255;
+  this.textC = this.wcolours[this.cIndex % this.wcolours.length];
   this.w = 0;
   
   if (page == "page_being.html") {
@@ -54,7 +56,8 @@ function Particle(x, y, length, maxSize, colour) {
         if (this.w < this.textmaxSize) {
           this.size = this.w + 4;
         } else {
-          this.size = this.textmaxSize;
+     this.fontSize=10;
+    this.size = this.textmaxSize;
         }
       }
 
@@ -73,26 +76,22 @@ function Particle(x, y, length, maxSize, colour) {
 
   }
   this.showWords = function () {
-
+    
+    textAlign(CENTER, CENTER);
+    rectMode(CENTER);
+    noStroke();
     for (var i = 0; i < this.history.length; i++) {
 
       var pos = this.history[i];
       var r = map(i, 0, this.history.length, 4, this.size);
-
       this.alpha = map(i, 0, this.history.length, 0, 255);
       fill(this.c);
-
-      stroke(this.c);
       ellipse(pos.x, pos.y, r, r);
-      noStroke();
       if (i == this.history.length - 1) {
+        //textWrap(WORD);
+        textSize(this.fontSize);
         fill(this.textC);
-        textSize(14);
-        textAlign(CENTER, CENTER);
-        textWrap(WORD);
-        rectMode(CENTER);
-        text(this.word, pos.x, pos.y, this.textmaxSize - 10, this.textmaxSize - 10);
-
+        text(this.word, pos.x, pos.y);
       }
     }
   }
@@ -141,11 +140,11 @@ function Particle(x, y, length, maxSize, colour) {
     if (this.pos.y < 0 || this.goalY < 0) {
       this.goalY = random(100);
     }
-    if (this.pos.x > windowWidth || this.goalX > windowWidth) {
-      this.goalX = windowWidth - random(100);
+    if (this.pos.x > ww || this.goalX > ww) {
+      this.goalX = ww - random(100);
     }
-    if (this.pos.y > windowHeight || this.goalY > windowHeight) {
-      this.goalY = windowHeight - random(100);
+    if (this.pos.y > wh || this.goalY > wh) {
+      this.goalY = wh - random(100);
     }
     this.grow();
   }
@@ -158,10 +157,10 @@ function Particle(x, y, length, maxSize, colour) {
 
     this.pos.x = lerp(this.pos.x, this.goalX, 0.05);
     this.pos.y = lerp(this.pos.y, this.goalY, 0.05);
-    if (d < 150) {
-      this.pos.x += sin((t * 0.02) + this.wIndex);
-      this.pos.y += sin((-t * 0.02) + this.wIndex);
-    }
+    // if (d < 150 && t % this.wIndex ==0) {
+    //   this.pos.x -= 1;
+    //   this.pos.y -= 1;
+    // }
 
   }
   this.jiggle = function () {
@@ -175,8 +174,8 @@ function Particle(x, y, length, maxSize, colour) {
 
   this.reBirth = function () {
     this.size = 0;
-    this.pos.x = random(windowWidth);
-    this.pos.y = random(windowHeight);
+    this.pos.x = random(ww);
+    this.pos.y = random(wh);
     this.goalX = this.pos.x;
     this.goalY = this.pos.y;
     if (page == "page_being.html") {
@@ -212,7 +211,7 @@ function Particle(x, y, length, maxSize, colour) {
     if (this.pos.x - this.radius < 0) {
       this.pos.x = this.radius; // Prevent from leaving the canvas from the left side
       this.velocity.x *= -1;
-    } else if (this.pos.x + this.radius > windowWidth) {
+    } else if (this.pos.x + this.radius > ww) {
       this.pos.x = width - this.radius; // Prevent from leaving the canvas from the right side
       this.velocity.x *= -1;
     }
@@ -220,19 +219,27 @@ function Particle(x, y, length, maxSize, colour) {
     if (this.pos.y - this.radius < 0) {
       this.pos.y = this.radius; // Prevent from leaving the canvas from the top
       this.velocity.y *= -1;
-    } else if (this.pos.y + this.radius > windowHeight) {
+    } else if (this.pos.y + this.radius > wh) {
       this.pos.y = height - this.radius; // Prevent from leaving the canvas from the bottom
       this.velocity.y *= -1;
     }
   }
 
   this.checkCollision = function () {
-    for (let other of brain_bits) {
+
+    var thisindex=brain_bits.indexOf(this);
+      // for(var j=0;j<brain_bits.length;j++){
+      //   var pB=brain_bits[j];
+        
+      //   let distance = this.pos.dist(other.pos);
+      //   let minDistance = this.radius + other.radius;
+      // }
+    
+    for (let other of brain_bits.slice(thisindex,brain_bits.length)) {
       if (this != other) {
         let distance = this.pos.dist(other.pos);
         let minDistance = this.radius + other.radius;
-
-
+ 
         if (distance <= minDistance) {
           // Calculate collision response
           let normal = p5.Vector.sub(other.pos, this.pos).normalize();
