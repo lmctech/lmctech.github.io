@@ -96,12 +96,16 @@
    if (page == "page_being.html") {
      showBrain();
      if (t % tSpeed == 0) {
-       changeText();
+       textChangeAnimation();
      }
    }
 
    gameUI();
 
+   if(nemo.size>=ww){ 
+    filter(INVERT); 
+    changeText("WARNING: FUN LEVELS EXCEEDING SAFETY TOLERANCES. ")
+   }
  }
 
  function gameUI() {
@@ -227,7 +231,14 @@
  var timer = 0;
  var scoreTracker = 0;
 
- function changeText() {
+ function changeText(text){
+  
+  var el = select("h1");
+  if(el.elt.textContent != text){
+  el.elt.textContent = text;}
+ }
+
+ function textChangeAnimation() {
    var el = select("h1");
    textCurrent = el.elt.textContent;
    var waitTime = 1000;
