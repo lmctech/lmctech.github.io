@@ -14,12 +14,14 @@
  var mazeX, mazeY;
 
  var words;
- var ww,wh;
+ var ww, wh;
+
+ var helpTextFill = 0;
 
  function preload() {
    img = loadImage('images/maze.svg');
    words = loadStrings('scripts/list.txt');
-
+   textFont('Overpass'); 
  }
 
  var t;
@@ -27,23 +29,24 @@
 
  function setup() {
    let myCanvas = createCanvas(windowWidth, windowHeight);
-   ww=windowWidth;
-   wh=windowHeight;
-   myCanvas.parent('background');
+   ww = windowWidth;
+   wh = windowHeight;
+   myCanvas.parent('background_canvas');
    placeMaze();
-   placeTracker();
+   placeCluster();
    mazeLine = createGraphics(windowWidth, windowHeight, P2D);
    x = 200;
    y = 200;
    var path = window.location.pathname;
    page = path.split("/").pop();
 
-   noStroke(); 
+   noStroke();
    find = false;
    let psize = 15;
    if (page == "page_being.html") {
      psize = 40;
    }
+   textFont('Overpass'); 
 
    nemo = new Particle(300, 300, 16, 18, 0);
    for (var i = 0; i < 15; i++) {
@@ -60,6 +63,7 @@
 
    if (page == "index.html") {
      playMaze();
+
    }
 
    if (page == "index.html") {
@@ -96,10 +100,27 @@
      }
    }
 
+   gameUI();
+
+ }
+
+ function gameUI() {
+
+  textSize(18);
+  textAlign(LEFT);
+  if (millis() >= 3000 && score < 10) {
+    if (helpTextFill <= 100) {
+      helpTextFill += 2;
+    }
+
+  }
+  if (helpTextFill > 0 && score > 10) {
+    helpTextFill -= 2;;
+  }
+  fill(0, helpTextFill);
+  text('move cursor to play :)', 50, windowHeight - 30);
 
    if (score < 5) {
-
-
      fill(0, map(score, 1, 5, 0, 100));
      text('Score:' + score, 50, windowHeight - 50);
    }
@@ -113,15 +134,23 @@
      fill(0, 50);
      text('Score:' + score + ' (nice)', 50, windowHeight - 50);
    }
+
+
  }
 
-
+ function showhitbox(hbx, hby, hbs) {
+   noFill();
+   stroke(150, 150, 0);
+   strokeWeight(2);
+   ellipse(hbx, hby, hbs, hbs);
+   noStroke();
+ }
 
  function windowResized() {
    resizeCanvas(windowWidth, windowHeight);
    placeMaze();
-   ww=windowWidth;
-   wh=windowHeight;
+   ww = windowWidth;
+   wh = windowHeight;
 
  }
 
@@ -129,6 +158,13 @@
 
    mazeX = (windowWidth * 0.6) + (img.width * .4);
    mazeY = windowHeight / 2;
+
+ }
+
+ function placeCluster() {
+
+   clusterX = (windowWidth * 0.6) + (img.width * .4);
+   clusterY = windowHeight / 2;
 
  }
 
@@ -151,12 +187,6 @@
    }
  }
 
- function placeTracker() {
-
-   trackerX = (windowWidth * 0.6) + (img.width * .4);
-   trackerY = windowHeight / 2;
-
- }
  var trackedWords = [" "];
  var trackedWordsCols = [0];
 
@@ -175,16 +205,17 @@
 
  var braincounter = 0;
 
- function addToBrain(caughtWord, col) {
-   brain_bits[braincounter] = new Particle(random(windowWidth), random(windowHeight), 16, 40, col);
+ function addToBrain(caughtWord, col, pos) {
+   brain_bits[braincounter] = new Particle(pos.x, pos.y, 16, 40, col);
    brain_bits[braincounter].word = caughtWord;
    brain_bits[braincounter].w = textWidth(caughtWord);
-   brain_bits[braincounter].goalX = mazeX;
-   brain_bits[braincounter].goalY = mazeY;
+   brain_bits[braincounter].goalX = clusterX;
+   brain_bits[braincounter].goalY = clusterY;
 
    brain_bits[braincounter].fixTextSize();
    brain_bits[braincounter].wIndex = braincounter;
    braincounter++;
+   //clusterX-=5;
  }
 
  var textInit = "Laura is a Stockholm-based creative technologist.";
@@ -193,81 +224,80 @@
  let phase = 0;
  let tSpeed = 2;
  let tI = 0;
- var timer=0;
- var scoreTracker=0;
+ var timer = 0;
+ var scoreTracker = 0;
 
  function changeText() {
    var el = select("h1");
    textCurrent = el.elt.textContent;
-   var waitTime=1000;
+   var waitTime = 1000;
 
    if (phase == 0) {
-    textCurrent = eraseText(textCurrent,"Laura is", 1,20);
+     textCurrent = eraseText(textCurrent, "Laura is", 1, 20);
    }
-   if (phase == 1) { 
-    textCurrent=addText(textCurrent,"Laura is...",'.', 2)
-    scoreTracker=score;
+   if (phase == 1) {
+     textCurrent = addText(textCurrent, "Laura is...", '.', 2)
+     scoreTracker = score;
    }
-   if (phase == 2) { 
+   if (phase == 2) {
 
-    if(score>=scoreTracker+3){
+     if (score >= scoreTracker + 3) {
 
-    textCurrent=addText(textCurrent,concat("Laura is...", textTarget[0]),textTarget[0].charAt(tI), 3);
-    timer=millis();
-    tI++;
-    }
+       textCurrent = addText(textCurrent, concat("Laura is...", textTarget[0]), textTarget[0].charAt(tI), 3);
+       timer = millis();
+       tI++;
+     }
    }
    if (phase == 3) {
-    tI=0;
-    if( millis() - timer >= waitTime ){
-      textCurrent = eraseText(textCurrent,"Laura is...", 4,3);
-    }
-    scoreTracker=score;
+     tI = 0;
+     if (millis() - timer >= waitTime) {
+       textCurrent = eraseText(textCurrent, "Laura is...", 4, 3);
+     }
+     scoreTracker = score;
    }
    if (phase == 4) {
-    if(score>=scoreTracker+3){
+     if (score >= scoreTracker + 3) {
 
-      textCurrent=addText(textCurrent,concat("Laura is...", textTarget[1]),textTarget[1].charAt(tI), 5);
-      timer=millis();
-     tI++;
-    }
+       textCurrent = addText(textCurrent, concat("Laura is...", textTarget[1]), textTarget[1].charAt(tI), 5);
+       timer = millis();
+       tI++;
+     }
    }
    if (phase == 5) {
-    tI=0;
-    if( millis() - timer >= waitTime ){
-    textCurrent = eraseText(textCurrent,"Laura is...", 6,3);
-    }
-    scoreTracker=score;
+     tI = 0;
+     if (millis() - timer >= waitTime) {
+       textCurrent = eraseText(textCurrent, "Laura is...", 6, 3);
+     }
+     scoreTracker = score;
    }
    if (phase == 6) {
-    if(score>=scoreTracker+3){
+     if (score >= scoreTracker + 3) {
 
-    textCurrent=addText(textCurrent,concat("Laura is...", textTarget[2]),textTarget[2].charAt(tI), 7);
-   tI++;
-    }
+       textCurrent = addText(textCurrent, concat("Laura is...", textTarget[2]), textTarget[2].charAt(tI), 7);
+       tI++;
+     }
    }
- 
+
    el.elt.textContent = textCurrent;
  }
 
- function eraseText(textCurrent,toText, toPhase,toSpeed) {
- 
+ function eraseText(textCurrent, toText, toPhase, toSpeed) {
+
    if (textCurrent != toText) {
-    textCurrent = textCurrent.slice(0, textCurrent.length - 1);
-   } 
-   else {
+     textCurrent = textCurrent.slice(0, textCurrent.length - 1);
+   } else {
      phase = toPhase;
      tSpeed = toSpeed;
    }
    return textCurrent;
  }
 
- function addText(textCurrent, toText,textToAdd, toPhase) {
-  if (textCurrent != toText) {
-    textCurrent = textCurrent.concat(textToAdd);
-  } else {
-    phase = toPhase;
-    tSpeed = 3;
-  }
-  return textCurrent;
+ function addText(textCurrent, toText, textToAdd, toPhase) {
+   if (textCurrent != toText) {
+     textCurrent = textCurrent.concat(textToAdd);
+   } else {
+     phase = toPhase;
+     tSpeed = 3;
+   }
+   return textCurrent;
  }

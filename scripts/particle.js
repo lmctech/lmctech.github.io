@@ -4,7 +4,7 @@ var wordCounter=0;
 function Particle(x, y, length, maxSize, colour) {
   this.velocity = createVector(random(-.1, .1), random(-.1, .1));
   this.acceleration = createVector(random(-.1, .1), random(-.1, .1));
-  this.maxSpeed = 4;
+  this.maxSpeed = 1;
   this.history = [];
   this.pos = createVector(x, y);
 
@@ -104,6 +104,7 @@ function Particle(x, y, length, maxSize, colour) {
     this.pos.x = lerp(this.pos.x, mouseX, d);
     this.pos.y = lerp(this.pos.y, mouseY, d);
   }
+ 
 
 
 
@@ -122,17 +123,18 @@ function Particle(x, y, length, maxSize, colour) {
 
     let dn = dist(this.pos.x, this.pos.y, nemo.pos.x, nemo.pos.y);
 
-    if (dn < this.size * 1.5) {
+    if (dn < ((nemo.size*0.5) + (this.size*0.5))) 
+    {if (!trackedWords.includes(this.word)) {
+      addToBrain(this.word, this.cIndex, this.pos);
+      trackedWords.push(this.word);
+    }
       this.goalX = this.pos.x + random(-150, 150);
       this.goalY = this.pos.y + random(-150, 150);
       nemo.cIndex = this.cIndex;
       nemo.size += 0.6;
+      
       this.reBirth();
       score++;
-      if (!trackedWords.includes(this.word)) {
-        addToBrain(this.word, this.cIndex);
-        trackedWords.push(this.word);
-      }
     }
     if (this.pos.x < 0 || this.goalX < 0) {
       this.goalX = random(100);
@@ -151,9 +153,9 @@ function Particle(x, y, length, maxSize, colour) {
 
   this.cluster = function () {
 
-    let d = dist(this.pos.x, this.pos.y, mazeX, mazeY);
-    this.goalX = lerp(this.goalX, mazeX, 0.02);
-    this.goalY = lerp(this.goalY, mazeY, 0.02);
+    //let d = dist(this.pos.x, this.pos.y, clusterX, clusterY);
+    this.goalX = lerp(this.goalX, clusterX, 0.02);
+    this.goalY = lerp(this.goalY, clusterY, 0.02);
 
     this.pos.x = lerp(this.pos.x, this.goalX, 0.05);
     this.pos.y = lerp(this.pos.y, this.goalY, 0.05);
@@ -166,7 +168,7 @@ function Particle(x, y, length, maxSize, colour) {
   this.jiggle = function () {
 
     let d = dist(this.pos.x, this.pos.y, nemo.pos.x, nemo.pos.y);
-    if (d <= this.size * 1.5) {
+    if (d <=  ((nemo.size*0.5) + (this.size*0.5))) {
       this.goalX += random(-20, 20);
       this.goalY += random(-20, 20);
     }
@@ -238,24 +240,24 @@ function Particle(x, y, length, maxSize, colour) {
     for (let other of brain_bits.slice(thisindex,brain_bits.length)) {
       if (this != other) {
         let distance = this.pos.dist(other.pos);
-        let minDistance = this.radius + other.radius;
+        let minDistance =  ((other.size*0.5) + (this.size*0.5));
  
         if (distance <= minDistance) {
           // Calculate collision response
           let normal = p5.Vector.sub(other.pos, this.pos).normalize();
           let relativeVelocity = p5.Vector.sub(other.velocity, this.velocity);
-          let impulse = p5.Vector.mult(normal, 2 * p5.Vector.dot(relativeVelocity, normal) / (1 + 1));
+          let impulse = p5.Vector.mult(normal, 2 * p5.Vector.dot(relativeVelocity, normal) / (2 + 1));
 
           // Apply repulsion force to prevent sticking
           let repulsion = p5.Vector.mult(normal, minDistance - distance);
 
           // Update velocities
-          this.velocity.add(p5.Vector.div(impulse, 2));
-          other.velocity.sub(p5.Vector.div(impulse, 2));
+          this.velocity.add(p5.Vector.div(impulse,3));
+          other.velocity.sub(p5.Vector.div(impulse,3));
 
           // Apply repulsion force
           this.pos.sub(p5.Vector.div(repulsion, 2));
-          other.pos.add(p5.Vector.div(repulsion, 2));
+          other.pos.add(p5.Vector.div(repulsion,2));
 
         }
       }

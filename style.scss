@@ -9,7 +9,7 @@ body {
 
 canvas {
     display: block;
-    position: absolute;
+    position: fixed;
     z-index: -1;
     max-width: 100%;
 }
@@ -100,9 +100,11 @@ canvas {
         max-width: 90vw;
     }
 
-    .background {
+    .background_canvas {
         grid-row-start: 0;
         grid-column-start: 0;
+        grid-row-end: -1;
+        grid-column-end: -1; 
         z-index: -1;
     }
 
